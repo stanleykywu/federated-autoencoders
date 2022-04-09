@@ -1,4 +1,6 @@
 from collections import OrderedDict
+
+from models.LargeImage_vae import LargeImageVAE
 from models.fmnist_vae import Fmnist_VAE
 
 import torch
@@ -15,7 +17,7 @@ DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 def load_data():
     """Load FMNIST (training and test set)."""
     transform = transforms.Compose(
-        [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
+        [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))],
     )
     trainset = FashionMNIST(".", train=True, download=True, transform=transform)
     testset = FashionMNIST(".", train=False, download=True, transform=transform)
@@ -26,7 +28,7 @@ def load_data():
 
 def train(net, trainloader, epochs):
     """Train the network on the training set."""
-    optimizer = torch.optim.Adam(net.parameters(), lr=0.001, momentum=0.9)
+    optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
 
     for _ in range(epochs):
         for images, _ in trainloader:
@@ -70,7 +72,7 @@ def generate(net, image):
 
 def main():
     # Load model and data
-    net = Fmnist_VAE(latent_size=10)
+    net = LargeImageVAE(latent_size=10)
     trainloader, testloader = load_data()
 
     class FMNISTClient(fl.client.NumPyClient):

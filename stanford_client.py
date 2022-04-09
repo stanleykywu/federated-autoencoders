@@ -30,7 +30,7 @@ def load_data():
 
 def train(net, trainloader, epochs):
     """Train the network on the training set."""
-    optimizer = torch.optim.Adam(net.parameters(), lr=0.001, momentum=0.9)
+    optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
 
     for _ in range(epochs):
         for images, _ in trainloader:
