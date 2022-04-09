@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Downloaded data folders
+FashionMNIST
+CIFAR-10
