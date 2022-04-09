@@ -7,7 +7,8 @@ import torch
 import torch.nn.functional as F
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
-from torchvision.datasets import FashionMNIST, StanfordCars, CIFAR10
+from torchvision.datasets import FashionMNIST, GTSRB, CIFAR10
+from dataset.dataset_manager import *
 
 import flwr as fl
 
@@ -16,7 +17,8 @@ DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def run_argparse():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", choices=["fmnist", "stanford", "cifar10"])
+    parser.add_argument("--dataset", choices=["fmnist", "gtrsb", "cifar10"])
+    parser.add_argument("--classes", "--names-list", nargs="+", default=[])
     parser.add_argument("--epochs", nargs="?", const=10, type=int, default=10)
     parser.add_argument("--latent_size", nargs="?", const=10, type=int, default=10)
     return parser.parse_args()
@@ -31,9 +33,21 @@ def load_data(dataset: str):
                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
             ],
         )
-        trainset = FashionMNIST(".", train=True, download=True, transform=transform)
-        testset = FashionMNIST(".", train=False, download=True, transform=transform)
-    elif dataset == "stanford":
+        trainset = FashionMNISTSubloader(
+            ".",
+            to_include=args.classes,
+            train=True,
+            download=True,
+            transform=transform,
+        )
+        testset = FashionMNISTSubloader(
+            ".",
+            to_include=args.classes,
+            train=False,
+            download=True,
+            transform=transform,
+        )
+    elif dataset == "cifar10":
         transform = transforms.Compose(
             [
                 transforms.ToTensor(),
@@ -41,17 +55,41 @@ def load_data(dataset: str):
                 transforms.Resize((32, 32)),
             ]
         )
-        trainset = StanfordCars(".", split="train", download=True, transform=transform)
-        testset = StanfordCars(".", split="test", download=True, transform=transform)
-    elif dataset == "cifar10":
+        trainset = CIFAR10SubLoader(
+            ".",
+            to_include=args.classes,
+            split="train",
+            download=True,
+            transform=transform,
+        )
+        testset = CIFAR10SubLoader(
+            ".",
+            to_include=args.classes,
+            split="test",
+            download=True,
+            transform=transform,
+        )
+    elif dataset == "gtrsb":
         transform = transforms.Compose(
             [
                 transforms.ToTensor(),
                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
             ]
         )
-        trainset = CIFAR10(".", train=True, download=True, transform=transform)
-        testset = CIFAR10(".", train=False, download=True, transform=transform)
+        trainset = GTSRBSubloader(
+            ".",
+            to_include=args.classes,
+            split="train",
+            download=True,
+            transform=transform,
+        )
+        testset = GTSRBSubloader(
+            ".",
+            to_include=args.classes,
+            split="test",
+            download=True,
+            transform=transform,
+        )
     else:
         raise NotImplementedError
 

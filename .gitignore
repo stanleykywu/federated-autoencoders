@@ -131,7 +131,9 @@ dmypy.json
 # Downloaded data folders
 .idea/
 FashionMNIST/
-stanford_cars/
+FashionMNISTSubloader/
+gtsrb/
+GTSRBSubloader/
 cifar-10-batches-py/
 cifar-10-python.tar.gz
 
