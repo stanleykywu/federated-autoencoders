@@ -58,14 +58,14 @@ def load_data(dataset: str):
         trainset = CIFAR10SubLoader(
             ".",
             to_include=args.classes,
-            split="train",
+            train=True,
             download=True,
             transform=transform,
         )
         testset = CIFAR10SubLoader(
             ".",
             to_include=args.classes,
-            split="test",
+            train=False,
             download=True,
             transform=transform,
         )

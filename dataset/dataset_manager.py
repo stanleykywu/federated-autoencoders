@@ -25,20 +25,12 @@ class CIFAR10SubLoader(torchvision.datasets.CIFAR10):
         exclude_list = [self._classes.index(item) for item in exclude_items]
         print("Generating CIFAR-10 DataLoader with classes:", to_include)
 
-        if self.train:
-            labels = np.array(self.targets)
-            exclude = np.array(exclude_list).reshape(1, -1)
-            mask = ~(labels.reshape(-1, 1) == exclude).any(axis=1)
+        labels = np.array(self.targets)
+        exclude = np.array(exclude_list).reshape(1, -1)
+        mask = ~(labels.reshape(-1, 1) == exclude).any(axis=1)
 
-            self.data = self.data[mask]
-            self.targets = labels[mask].tolist()
-        else:
-            labels = np.array(self.targets)
-            exclude = np.array(exclude_list).reshape(1, -1)
-            mask = ~(labels.reshape(-1, 1) == exclude).any(axis=1)
-
-            self.data = self.data[mask]
-            self.targets = labels[mask].tolist()
+        self.data = self.data[mask]
+        self.targets = labels[mask].tolist()
 
 
 class FashionMNISTSubloader(torchvision.datasets.FashionMNIST):
@@ -64,20 +56,12 @@ class FashionMNISTSubloader(torchvision.datasets.FashionMNIST):
         exclude_list = [self._classes.index(item) for item in exclude_items]
         print("Generating FashionMNIST DataLoader with classes:", to_include)
 
-        if self.train:
-            labels = np.array(self.targets)
-            exclude = np.array(exclude_list).reshape(1, -1)
-            mask = ~(labels.reshape(-1, 1) == exclude).any(axis=1)
+        labels = np.array(self.targets)
+        exclude = np.array(exclude_list).reshape(1, -1)
+        mask = ~(labels.reshape(-1, 1) == exclude).any(axis=1)
 
-            self.data = self.data[mask]
-            self.targets = labels[mask].tolist()
-        else:
-            labels = np.array(self.targets)
-            exclude = np.array(exclude_list).reshape(1, -1)
-            mask = ~(labels.reshape(-1, 1) == exclude).any(axis=1)
-
-            self.data = self.data[mask]
-            self.targets = labels[mask].tolist()
+        self.data = self.data[mask]
+        self.targets = labels[mask].tolist()
 
 
 class GTSRBSubloader(torchvision.datasets.GTSRB):
@@ -134,19 +118,10 @@ class GTSRBSubloader(torchvision.datasets.GTSRB):
         for item in to_include:
             exclude_items.remove(item)
         exclude_list = [self._classes.index(item) for item in exclude_items]
-        print("Generating FashionMNIST DataLoader with classes:", to_include)
+        print("Generating GTSRB DataLoader with classes:", to_include)
 
-        if self.train:
-            labels = np.array(self.targets)
-            exclude = np.array(exclude_list).reshape(1, -1)
-            mask = ~(labels.reshape(-1, 1) == exclude).any(axis=1)
+        labels = np.array([sample[1] for sample in self._samples])
+        exclude = np.array(exclude_list).reshape(1, -1)
+        mask = ~(labels.reshape(-1, 1) == exclude).any(axis=1)
 
-            self.data = self.data[mask]
-            self.targets = labels[mask].tolist()
-        else:
-            labels = np.array(self.targets)
-            exclude = np.array(exclude_list).reshape(1, -1)
-            mask = ~(labels.reshape(-1, 1) == exclude).any(axis=1)
-
-            self.data = self.data[mask]
-            self.targets = labels[mask].tolist()
+        self._samples = [s for idx, s in enumerate(self._samples) if mask[idx] == 1]
