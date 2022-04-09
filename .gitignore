@@ -1,3 +1,7 @@
+cifar-10-batches-py/
+cifar-10-python.tar.gz
+.idea/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
