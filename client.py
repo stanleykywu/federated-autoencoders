@@ -74,6 +74,7 @@ def load_data(dataset: str):
             [
                 transforms.ToTensor(),
                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+                transforms.Resize((32, 32)),
             ]
         )
         trainset = GTSRBSubloader(
