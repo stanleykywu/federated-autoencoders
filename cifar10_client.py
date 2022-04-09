@@ -1,11 +1,11 @@
 from collections import OrderedDict
-from models.fmnist_vae import Fmnist_VAE
+from models.LargeImage_vae import LargeImageVAE
 
 import torch
 import torch.nn.functional as F
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
-from torchvision.datasets import FashionMNIST
+from torchvision.datasets import CIFAR10
 
 import flwr as fl
 
@@ -17,8 +17,8 @@ def load_data():
     transform = transforms.Compose(
         [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
     )
-    trainset = FashionMNIST(".", train=True, download=True, transform=transform)
-    testset = FashionMNIST(".", train=False, download=True, transform=transform)
+    trainset = CIFAR10(".", train=True, download=True, transform=transform)
+    testset = CIFAR10(".", train=False, download=True, transform=transform)
     trainloader = DataLoader(trainset, batch_size=128, shuffle=True)
     testloader = DataLoader(testset, batch_size=128)
     return trainloader, testloader
@@ -70,10 +70,10 @@ def generate(net, image):
 
 def main():
     # Load model and data
-    net = Fmnist_VAE(latent_size=10)
+    net = LargeImageVAE(latent_size=10)
     trainloader, testloader = load_data()
 
-    class FMNISTClient(fl.client.NumPyClient):
+    class Cifar10Client(fl.client.NumPyClient):
         def get_parameters(self):
             return [val.cpu().numpy() for _, val in net.state_dict().items()]
 
@@ -92,7 +92,7 @@ def main():
             loss = test(net, testloader)
             return float(loss), len(testloader), {}
 
-    fl.client.start_numpy_client("[::]:8080", client=FMNISTClient())
+    fl.client.start_numpy_client("[::]:8080", client=Cifar10Client())
 
 
 if __name__ == "__main__":
