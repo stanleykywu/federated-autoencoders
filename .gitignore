@@ -1,7 +1,3 @@
-cifar-10-batches-py/
-cifar-10-python.tar.gz
-.idea/
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -133,6 +129,10 @@ dmypy.json
 .pyre/
 
 # Downloaded data folders
-FashionMNIST
-cifar-10-batches-py
-stanford_cars
+.idea/
+FashionMNIST/
+stanford_cars/
+cifar-10-batches-py/
+cifar-10-python.tar.gz
+
+
