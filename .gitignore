@@ -130,4 +130,5 @@ dmypy.json
 
 # Downloaded data folders
 FashionMNIST
-CIFAR-10
+cifar-10-batches-py
+stanford_cars
