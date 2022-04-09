@@ -1,26 +1,60 @@
 from collections import OrderedDict
+import argparse
 
-from models.LargeImage_vae import LargeImageVAE
-from models.fmnist_vae import Fmnist_VAE
+from models.Image_VAE import ImageVAE
 
 import torch
 import torch.nn.functional as F
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
-from torchvision.datasets import FashionMNIST
+from torchvision.datasets import FashionMNIST, StanfordCars, CIFAR10
 
 import flwr as fl
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-def load_data():
-    """Load FMNIST (training and test set)."""
-    transform = transforms.Compose(
-        [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))],
-    )
-    trainset = FashionMNIST(".", train=True, download=True, transform=transform)
-    testset = FashionMNIST(".", train=False, download=True, transform=transform)
+def run_argparse():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dataset", choices=["fmnist", "stanford", "cifar10"])
+    parser.add_argument("--epochs", nargs="?", const=10, type=int, default=10)
+    parser.add_argument("--latent_size", nargs="?", const=10, type=int, default=10)
+    return parser.parse_args()
+
+
+def load_data(dataset: str):
+    """Load dataset (training and test set)."""
+    if dataset == "fmnist":
+        transform = transforms.Compose(
+            [
+                transforms.ToTensor(),
+                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+            ],
+        )
+        trainset = FashionMNIST(".", train=True, download=True, transform=transform)
+        testset = FashionMNIST(".", train=False, download=True, transform=transform)
+    elif dataset == "stanford":
+        transform = transforms.Compose(
+            [
+                transforms.ToTensor(),
+                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+                transforms.Resize((32, 32)),
+            ]
+        )
+        trainset = StanfordCars(".", split="train", download=True, transform=transform)
+        testset = StanfordCars(".", split="test", download=True, transform=transform)
+    elif dataset == "cifar10":
+        transform = transforms.Compose(
+            [
+                transforms.ToTensor(),
+                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+            ]
+        )
+        trainset = CIFAR10(".", train=True, download=True, transform=transform)
+        testset = CIFAR10(".", train=False, download=True, transform=transform)
+    else:
+        raise NotImplementedError
+
     trainloader = DataLoader(trainset, batch_size=128, shuffle=True)
     testloader = DataLoader(testset, batch_size=128)
     return trainloader, testloader
@@ -70,12 +104,12 @@ def generate(net, image):
         return net.forward(image)
 
 
-def main():
+def main(args):
     # Load model and data
-    net = LargeImageVAE(latent_size=10)
-    trainloader, testloader = load_data()
+    net = ImageVAE(latent_size=args.latent_size)
+    trainloader, testloader = load_data(args.dataset)
 
-    class FMNISTClient(fl.client.NumPyClient):
+    class Client(fl.client.NumPyClient):
         def get_parameters(self):
             return [val.cpu().numpy() for _, val in net.state_dict().items()]
 
@@ -86,7 +120,7 @@ def main():
 
         def fit(self, parameters, config):
             self.set_parameters(parameters)
-            train(net, trainloader, epochs=10)
+            train(net, trainloader, epochs=args.epochs)
             return self.get_parameters(), len(trainloader), {}
 
         def evaluate(self, parameters, config):
@@ -94,8 +128,9 @@ def main():
             loss = test(net, testloader)
             return float(loss), len(testloader), {}
 
-    fl.client.start_numpy_client("[::]:8080", client=FMNISTClient())
+    fl.client.start_numpy_client("[::]:8080", client=Client())
 
 
 if __name__ == "__main__":
-    main()
+    args = run_argparse()
+    main(args)
