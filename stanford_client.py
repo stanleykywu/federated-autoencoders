@@ -77,7 +77,7 @@ def main():
     net = LargeImageVAE(latent_size=10)
     trainloader, testloader = load_data()
 
-    class Food101Client(fl.client.NumPyClient):
+    class StanfordCarsClient(fl.client.NumPyClient):
         def get_parameters(self):
             return [val.cpu().numpy() for _, val in net.state_dict().items()]
 
@@ -96,7 +96,7 @@ def main():
             loss = test(net, testloader)
             return float(loss), len(testloader), {}
 
-    fl.client.start_numpy_client("[::]:8080", client=Food101Client())
+    fl.client.start_numpy_client("[::]:8080", client=StanfordCarsClient())
 
 
 if __name__ == "__main__":
