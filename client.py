@@ -22,11 +22,11 @@ DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def run_argparse():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", choices=["fmnist", "gtrsb", "cifar10"])
+    parser.add_argument("--dataset", choices=["fmnist", "gtsrb", "cifar10"])
     parser.add_argument("--classes", "--names-list", nargs="+", default=[])
     parser.add_argument("--epochs", nargs="?", const=10, type=int, default=10)
     parser.add_argument("--latent_size", nargs="?", const=10, type=int, default=10)
-    parser.add_argument("--verbose", dest="verbose", action="store_false")
+    parser.add_argument("--verbose", dest="verbose", action="store_true")
     return parser.parse_args()
 
 
@@ -35,9 +35,10 @@ def load_data(dataset: str):
     if dataset == "fmnist":
         transform = transforms.Compose(
             [
+                transforms.Grayscale(num_output_channels=3),
                 transforms.ToTensor(),
                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
-                transforms.Grayscale(3),
+                transforms.Resize((32, 32)),
             ],
         )
         trainset = FashionMNISTSubloader(
@@ -76,7 +77,7 @@ def load_data(dataset: str):
             download=True,
             transform=transform,
         )
-    elif dataset == "gtrsb":
+    elif dataset == "gtsrb":
         transform = transforms.Compose(
             [
                 transforms.ToTensor(),
@@ -158,6 +159,21 @@ def generate(net, image):
         return net.forward(image)
 
 
+def save_images(net, loader):
+    """Save the generated images for the trained VAE"""
+    for batch in loader:
+        images = batch[0].to(DEVICE)
+        recon_images, _, _ = generate(net, images)
+        for i, (recon_image, image) in enumerate(zip(recon_images, images)):
+            plt.imshow(np.squeeze(image).T)
+            plt.savefig(f"images/original_{i}.png", dpi=100)
+            plt.clf()
+            plt.imshow(np.squeeze(recon_image).T)
+            plt.savefig(f"images/generated_{i}.png", dpi=100)
+            plt.clf()
+        break
+
+
 def main(args):
     # Load model and data
     net = ImageVAE(latent_size=args.latent_size)
@@ -174,28 +190,23 @@ def main(args):
 
         def fit(self, parameters, config):
             self.set_parameters(parameters)
-            train(
+            train_metrics = train(
                 net,
                 trainloader,
                 epochs=args.epochs,
                 testloader=testloader if args.verbose else None,
                 verbose=args.verbose,
             )
+            np.save(f"models/{args.dataset}_{args.epochs}_train_metrics", train_metrics)
+            save_images(net, trainloader)
             return self.get_parameters(), len(trainloader), {}
 
         def evaluate(self, parameters, config):
             self.set_parameters(parameters)
-            for data in testloader:
-                images = data[0].to(DEVICE)
-                example, _, _ = generate(net, images)
-                for i, img in enumerate(example):
-                    plt.savefig(f"images/{i}.png", dpi=100)
-                    plt.imshow(np.squeeze(img).T)
-                break
             tst_loss = eval_backprop_loss(net, testloader)
             return (float(tst_loss), len(testloader), {})
 
-    fl.client.start_numpy_client("[::]:8080", client=Client())
+    fl.client.start_numpy_client("localhost:8080", client=Client())
 
 
 if __name__ == "__main__":

@@ -137,4 +137,8 @@ GTSRBSubloader/
 cifar-10-batches-py/
 cifar-10-python.tar.gz
 
+# Experimental data
+images/
+models/*.npy
+
 
