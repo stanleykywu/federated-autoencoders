@@ -25,7 +25,7 @@ def run_argparse():
     parser.add_argument("--classes", "--names-list", nargs="+", default=[])
     parser.add_argument("--epochs", nargs="?", const=10, type=int, default=10)
     parser.add_argument("--latent_size", nargs="?", const=10, type=int, default=10)
-    parser.add_argument("--verbose", dest="dpsgd", action="store_false")
+    parser.add_argument("--verbose", dest="verbose", action="store_false")
     return parser.parse_args()
 
 
