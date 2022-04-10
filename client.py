@@ -122,14 +122,14 @@ def train(net, trainloader, epochs, testloader=None, verbose=False):
 
             metrics = {
                 "Training backprop loss": float(trn_loss),
-                "Testing backprop loss": float(tst_loss),
+                "Training recon loss": float(trn_reconstruction_loss),
             }
 
             if testloader:
-                tst_reconstruction_loss = eval_reconstruction(net, testloader)
                 tst_loss = eval_backprop_loss(net, testloader)
-                metrics["Training recon loss"] = (float(trn_reconstruction_loss),)
-                metrics["Testing recon loss"] = (float(tst_reconstruction_loss),)
+                tst_reconstruction_loss = eval_reconstruction(net, testloader)
+                metrics["Testing backprop loss"] = float(tst_loss)
+                metrics["Testing recon loss"] = float(tst_reconstruction_loss)
 
             print("Metrics at epoch {}: {}".format(i, metrics))
 
