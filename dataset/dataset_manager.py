@@ -19,7 +19,11 @@ class CIFAR10SubLoader(torchvision.datasets.CIFAR10):
             "truck",
         )
 
-        exclude_items = list(self._classes)
+        if not to_include:
+            exclude_items = []
+        else:
+            exclude_items = list(self._classes)
+
         for item in to_include:
             exclude_items.remove(item)
         exclude_list = [self._classes.index(item) for item in exclude_items]
@@ -50,7 +54,11 @@ class FashionMNISTSubloader(torchvision.datasets.FashionMNIST):
             "Ankle boot",
         )
 
-        exclude_items = list(self._classes)
+        if not to_include:
+            exclude_items = []
+        else:
+            exclude_items = list(self._classes)
+
         for item in to_include:
             exclude_items.remove(item)
         exclude_list = [self._classes.index(item) for item in exclude_items]
@@ -114,7 +122,11 @@ class GTSRBSubloader(torchvision.datasets.GTSRB):
             "Endnopassingveh>3.5tons",
         )
 
-        exclude_items = list(self._classes)
+        if not to_include:
+            exclude_items = []
+        else:
+            exclude_items = list(self._classes)
+            
         for item in to_include:
             exclude_items.remove(item)
         exclude_list = [self._classes.index(item) for item in exclude_items]
