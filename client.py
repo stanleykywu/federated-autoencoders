@@ -13,6 +13,7 @@ from dataset.dataset_manager import *
 import flwr as fl
 
 from tqdm import tqdm
+import matplotlib.pyplot as plt
 
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -182,6 +183,13 @@ def main(args):
 
         def evaluate(self, parameters, config):
             self.set_parameters(parameters)
+            for data in testloader:
+                images = data[0].to(DEVICE)
+                example, _, _ = generate(net, images)
+                for i, img in enumerate(example):
+                    plt.savefig(f'images/{i}.png', dpi=100)
+                    plt.imshow(np.squeeze(img).T)
+                break
             tst_loss = eval_backprop_loss(net, testloader)
             return (float(tst_loss), len(testloader), {})
 
