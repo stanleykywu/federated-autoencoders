@@ -2,7 +2,7 @@ from collections import OrderedDict
 import argparse
 
 from models.Image_VAE import ImageVAE
-from utils.metrics import eval_reconstruction
+from utils.metrics import eval_backprop_loss, eval_reconstruction
 
 import torch
 import torch.nn.functional as F
@@ -102,11 +102,11 @@ def load_data(dataset: str):
     return trainloader, testloader
 
 
-def train(net, trainloader, epochs):
+def train(net, trainloader, epochs, testloader=None, verbose=False):
     """Train the network on the training set."""
     optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
 
-    for _ in tqdm(range(epochs), desc=f"Training VAE on {epochs} epochs"):
+    for i in tqdm(range(epochs), desc=f"Training VAE on {epochs} epochs"):
         for images, _ in trainloader:
             optimizer.zero_grad()
             recon_images, mu, logvar = net(images)
@@ -116,19 +116,22 @@ def train(net, trainloader, epochs):
             loss.backward()
             optimizer.step()
 
+        if verbose:
+            trn_loss = eval_backprop_loss(net, trainloader)
+            trn_reconstruction_loss = eval_reconstruction(net, trainloader)
 
-def test(net, testloader):
-    """Validate the network on the entire test set."""
-    total, loss = 0, 0.0
-    with torch.no_grad():
-        for data in tqdm(testloader, desc=f"Evaluating backprop loss on VAE"):
-            images = data[0].to(DEVICE)
-            recon_images, mu, logvar = net(images)
-            recon_loss = F.mse_loss(recon_images, images)
-            kld_loss = -0.5 * torch.mean(1 + logvar - mu.pow(2) - logvar.exp())
-            loss += recon_loss + kld_loss
-            total += len(images)
-    return loss / total
+            metrics = {
+                "Training backprop loss": float(trn_loss),
+                "Testing backprop loss": float(tst_loss),
+            }
+
+            if testloader:
+                tst_reconstruction_loss = eval_reconstruction(net, testloader)
+                tst_loss = eval_backprop_loss(net, testloader)
+                metrics["Training recon loss"] = (float(trn_reconstruction_loss),)
+                metrics["Testing recon loss"] = (float(tst_reconstruction_loss),)
+
+            print("Metrics at epoch {}: {}".format(i, metrics))
 
 
 def sample(net):
@@ -162,13 +165,19 @@ def main(args):
 
         def fit(self, parameters, config):
             self.set_parameters(parameters)
-            train(net, trainloader, epochs=args.epochs)
+            train(
+                net,
+                trainloader,
+                epochs=args.epochs,
+                testloader=testloader,
+                verbose=True,
+            )
             return self.get_parameters(), len(trainloader), {}
 
         def evaluate(self, parameters, config):
             self.set_parameters(parameters)
-            trn_loss = test(net, trainloader)
-            tst_loss = test(net, testloader)
+            trn_loss = eval_backprop_loss(net, trainloader)
+            tst_loss = eval_backprop_loss(net, testloader)
             trn_reconstruction_loss = eval_reconstruction(net, trainloader)
             tst_reconstruction_loss = eval_reconstruction(net, testloader)
             return (
