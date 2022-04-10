@@ -24,6 +24,7 @@ def run_argparse():
     parser.add_argument("--classes", "--names-list", nargs="+", default=[])
     parser.add_argument("--epochs", nargs="?", const=10, type=int, default=10)
     parser.add_argument("--latent_size", nargs="?", const=10, type=int, default=10)
+    parser.add_argument("--verbose", dest="dpsgd", action="store_false")
     return parser.parse_args()
 
 
@@ -34,6 +35,7 @@ def load_data(dataset: str):
             [
                 transforms.ToTensor(),
                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+                transforms.Grayscale(3),
             ],
         )
         trainset = FashionMNISTSubloader(
@@ -77,7 +79,6 @@ def load_data(dataset: str):
             [
                 transforms.ToTensor(),
                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
-                transforms.Resize((32, 32)),
             ]
         )
         trainset = GTSRBSubloader(
@@ -106,6 +107,7 @@ def train(net, trainloader, epochs, testloader=None, verbose=False):
     """Train the network on the training set."""
     optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
 
+    metrics = []
     for i in tqdm(range(epochs), desc=f"Training VAE on {epochs} epochs"):
         for images, _ in trainloader:
             optimizer.zero_grad()
@@ -116,22 +118,26 @@ def train(net, trainloader, epochs, testloader=None, verbose=False):
             loss.backward()
             optimizer.step()
 
+        trn_loss = eval_backprop_loss(net, trainloader)
+        trn_reconstruction_loss = eval_reconstruction(net, trainloader)
+
+        epoch_metrics = {
+            "Training backprop loss": float(trn_loss),
+            "Training recon loss": float(trn_reconstruction_loss),
+        }
+
+        if testloader:
+            tst_loss = eval_backprop_loss(net, testloader)
+            tst_reconstruction_loss = eval_reconstruction(net, testloader)
+            epoch_metrics["Testing backprop loss"] = float(tst_loss)
+            epoch_metrics["Testing recon loss"] = float(tst_reconstruction_loss)
+
+        metrics.append(epoch_metrics)
+
         if verbose:
-            trn_loss = eval_backprop_loss(net, trainloader)
-            trn_reconstruction_loss = eval_reconstruction(net, trainloader)
-
-            metrics = {
-                "Training backprop loss": float(trn_loss),
-                "Training recon loss": float(trn_reconstruction_loss),
-            }
-
-            if testloader:
-                tst_loss = eval_backprop_loss(net, testloader)
-                tst_reconstruction_loss = eval_reconstruction(net, testloader)
-                metrics["Testing backprop loss"] = float(tst_loss)
-                metrics["Testing recon loss"] = float(tst_reconstruction_loss)
-
             print("Metrics at epoch {}: {}".format(i, metrics))
+
+    return metrics
 
 
 def sample(net):
@@ -169,27 +175,15 @@ def main(args):
                 net,
                 trainloader,
                 epochs=args.epochs,
-                testloader=testloader,
-                verbose=True,
+                testloader=testloader if args.verbose else None,
+                verbose=args.verbose,
             )
             return self.get_parameters(), len(trainloader), {}
 
         def evaluate(self, parameters, config):
             self.set_parameters(parameters)
-            trn_loss = eval_backprop_loss(net, trainloader)
             tst_loss = eval_backprop_loss(net, testloader)
-            trn_reconstruction_loss = eval_reconstruction(net, trainloader)
-            tst_reconstruction_loss = eval_reconstruction(net, testloader)
-            return (
-                float(tst_loss),
-                len(testloader),
-                {
-                    "Training backprop loss": float(trn_loss),
-                    "Testing backprop loss": float(tst_loss),
-                    "Training recon loss": float(trn_reconstruction_loss),
-                    "Testing recon loss": float(tst_reconstruction_loss),
-                },
-            )
+            return (float(tst_loss), len(testloader), {})
 
     fl.client.start_numpy_client("[::]:8080", client=Client())
 

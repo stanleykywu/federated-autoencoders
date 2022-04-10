@@ -11,7 +11,7 @@ def eval_reconstruction(net, testloader):
     """Validate the network on just reconstruction loss."""
     total, recon_loss = 0, 0.0
     with torch.no_grad():
-        for data in tqdm(testloader, desc=f"Evaluating recon loss on VAE"):
+        for data in testloader:
             images = data[0].to(DEVICE)
             recon_images, _, _ = net(images)
             recon_loss += F.mse_loss(recon_images, images)
@@ -23,7 +23,7 @@ def eval_backprop_loss(net, testloader):
     """Validate the network on backprop loss (recon + kl divergence)"""
     total, loss = 0, 0.0
     with torch.no_grad():
-        for data in tqdm(testloader, desc=f"Evaluating backprop loss on VAE"):
+        for data in testloader:
             images = data[0].to(DEVICE)
             recon_images, mu, logvar = net(images)
             recon_loss = F.mse_loss(recon_images, images)
