@@ -7,10 +7,11 @@ import torch
 import torch.nn.functional as F
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
-from torchvision.datasets import FashionMNIST, GTSRB, CIFAR10
 from dataset.dataset_manager import *
 
 import flwr as fl
+
+from utils.metrics import eval_reconstruction
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -164,8 +165,20 @@ def main(args):
 
         def evaluate(self, parameters, config):
             self.set_parameters(parameters)
-            loss = test(net, testloader)
-            return float(loss), len(testloader), {}
+            trn_loss = test(net, trainloader)
+            tst_loss = test(net, testloader)
+            trn_reconstruction_loss = eval_reconstruction(net, trainloader)
+            tst_reconstruction_loss = eval_reconstruction(net, testloader)
+            return (
+                float(tst_loss),
+                len(testloader),
+                {
+                    "Training backprop loss": float(trn_loss),
+                    "Testing backprop loss": float(tst_loss),
+                    "Training recon loss": float(trn_reconstruction_loss),
+                    "Testing recon loss": float(tst_reconstruction_loss),
+                },
+            )
 
     fl.client.start_numpy_client("[::]:8080", client=Client())
 
