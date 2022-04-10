@@ -2,6 +2,7 @@ from collections import OrderedDict
 import argparse
 
 from models.Image_VAE import ImageVAE
+from utils.metrics import eval_reconstruction
 
 import torch
 import torch.nn.functional as F
@@ -11,7 +12,8 @@ from dataset.dataset_manager import *
 
 import flwr as fl
 
-from utils.metrics import eval_reconstruction
+from tqdm import tqdm
+
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -104,7 +106,7 @@ def train(net, trainloader, epochs):
     """Train the network on the training set."""
     optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
 
-    for _ in range(epochs):
+    for _ in tqdm(range(epochs), desc=f"Training VAE on {epochs} epochs"):
         for images, _ in trainloader:
             optimizer.zero_grad()
             recon_images, mu, logvar = net(images)
@@ -119,7 +121,7 @@ def test(net, testloader):
     """Validate the network on the entire test set."""
     total, loss = 0, 0.0
     with torch.no_grad():
-        for data in testloader:
+        for data in tqdm(testloader, desc=f"Evaluating backprop loss on VAE"):
             images = data[0].to(DEVICE)
             recon_images, mu, logvar = net(images)
             recon_loss = F.mse_loss(recon_images, images)
