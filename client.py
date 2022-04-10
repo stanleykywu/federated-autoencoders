@@ -13,6 +13,7 @@ from dataset.dataset_manager import *
 import flwr as fl
 
 from tqdm import tqdm
+
 import matplotlib.pyplot as plt
 
 
@@ -80,6 +81,7 @@ def load_data(dataset: str):
             [
                 transforms.ToTensor(),
                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+                transforms.Resize((32, 32)),
             ]
         )
         trainset = GTSRBSubloader(
@@ -187,7 +189,7 @@ def main(args):
                 images = data[0].to(DEVICE)
                 example, _, _ = generate(net, images)
                 for i, img in enumerate(example):
-                    plt.savefig(f'images/{i}.png', dpi=100)
+                    plt.savefig(f"images/{i}.png", dpi=100)
                     plt.imshow(np.squeeze(img).T)
                 break
             tst_loss = eval_backprop_loss(net, testloader)
