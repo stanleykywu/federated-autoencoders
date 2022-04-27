@@ -56,7 +56,6 @@ coverage.xml
 *.pot
 
 # Django stuff:
-*.log
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
@@ -138,7 +137,7 @@ cifar-10-batches-py/
 cifar-10-python.tar.gz
 
 # Experimental data
-images/
-models/*.npy
+#images/
+#models/*.npy
 
 

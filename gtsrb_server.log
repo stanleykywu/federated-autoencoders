@@ -1,0 +1,35 @@
+➜  Federated-Autoencoders git:(main) ✗ python client.py --dataset=gtsrb --classes Right-of-wayatintersection Stop Roadwork --epochs=15 --type server
+Generating GTSRB DataLoader with classes: ['Right-of-wayatintersection', 'Stop', 'Roadwork']
+Generating GTSRB DataLoader with classes: ['Right-of-wayatintersection', 'Stop', 'Roadwork']
+INFO flower 2022-04-26 23:53:15,788 | app.py:109 | Flower server running (3 rounds)
+SSL is disabled
+INFO flower 2022-04-26 23:53:15,788 | server.py:128 | Initializing global parameters
+INFO flower 2022-04-26 23:53:15,788 | server.py:327 | Requesting initial parameters from one random client
+INFO flower 2022-04-26 23:54:04,128 | server.py:330 | Received initial parameters from one random client
+INFO flower 2022-04-26 23:54:04,128 | server.py:130 | Evaluating initial parameters
+INFO flower 2022-04-26 23:54:04,725 | server.py:133 | initial parameters (loss, other metrics): 0.0036636418662965298, {}
+INFO flower 2022-04-26 23:54:04,725 | server.py:143 | FL starting
+DEBUG flower 2022-04-26 23:54:04,725 | server.py:265 | fit_round: strategy sampled 3 clients (out of 3)
+DEBUG flower 2022-04-26 23:54:20,185 | server.py:277 | fit_round received 3 results and 0 failures
+INFO flower 2022-04-26 23:54:20,673 | server.py:158 | fit progress: (1, 0.0035760935861617327, {}, 15.948011124999994)
+INFO flower 2022-04-26 23:54:20,673 | server.py:209 | evaluate_round: no clients selected, cancel
+DEBUG flower 2022-04-26 23:54:20,673 | server.py:265 | fit_round: strategy sampled 3 clients (out of 3)
+DEBUG flower 2022-04-26 23:54:36,081 | server.py:277 | fit_round received 3 results and 0 failures
+INFO flower 2022-04-26 23:54:36,568 | server.py:158 | fit progress: (2, 0.0039499481208622456, {}, 31.843069291999996)
+INFO flower 2022-04-26 23:54:36,568 | server.py:209 | evaluate_round: no clients selected, cancel
+DEBUG flower 2022-04-26 23:54:36,569 | server.py:265 | fit_round: strategy sampled 3 clients (out of 3)
+DEBUG flower 2022-04-26 23:54:51,662 | server.py:277 | fit_round received 3 results and 0 failures
+INFO flower 2022-04-26 23:54:52,015 | server.py:158 | fit progress: (3, 0.004388122819364071, {}, 47.289611167000004)
+INFO flower 2022-04-26 23:54:52,015 | server.py:209 | evaluate_round: no clients selected, cancel
+INFO flower 2022-04-26 23:54:52,015 | server.py:182 | FL finished in 47.289764459
+INFO flower 2022-04-26 23:54:52,015 | app.py:149 | app_fit: losses_distributed []
+INFO flower 2022-04-26 23:54:52,016 | app.py:150 | app_fit: metrics_distributed {}
+INFO flower 2022-04-26 23:54:52,016 | app.py:151 | app_fit: losses_centralized [(0, 0.0036636418662965298), (1, 0.0035760935861617327), (2, 0.0039499481208622456), (3, 0.004388122819364071)]
+INFO flower 2022-04-26 23:54:52,016 | app.py:152 | app_fit: metrics_centralized {}
+
+
+Client Command:
+
+python client.py --dataset=gtsrb --classes Right-of-wayatintersection --epochs=15 --type client &
+python client.py --dataset=gtsrb --classes Stop --epochs=15 --type client &
+python client.py --dataset=gtsrb --classes Roadwork --epochs=15 --type client

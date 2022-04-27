@@ -1,6 +1,8 @@
 from collections import OrderedDict
 import argparse
 
+from flwr.server.strategy import FedAvg
+
 from models.Image_VAE import ImageVAE
 from utils.metrics import eval_backprop_loss, eval_reconstruction
 
@@ -27,6 +29,7 @@ def run_argparse():
     parser.add_argument("--epochs", nargs="?", const=10, type=int, default=10)
     parser.add_argument("--latent_size", nargs="?", const=10, type=int, default=10)
     parser.add_argument("--verbose", dest="verbose", action="store_true")
+    parser.add_argument("--type", dest="type", choices=["client", "server"])
     return parser.parse_args()
 
 
@@ -159,18 +162,22 @@ def generate(net, image):
         return net.forward(image)
 
 
-def save_images(net, loader):
+def save_images(net, loader, classes, call_num, num_images=0):
     """Save the generated images for the trained VAE"""
+    seen_images = 0
     for batch in loader:
         images = batch[0].to(DEVICE)
         recon_images, _, _ = generate(net, images)
         for i, (recon_image, image) in enumerate(zip(recon_images, images)):
             plt.imshow(np.squeeze(image).T)
-            plt.savefig(f"images/original_{i}.png", dpi=100)
+            plt.savefig(f"images/original_{i}_{call_num}_{classes}.png", dpi=100)
             plt.clf()
             plt.imshow(np.squeeze(recon_image).T)
-            plt.savefig(f"images/generated_{i}.png", dpi=100)
+            plt.savefig(f"images/generated_{i}_{call_num}_{classes}.png", dpi=100)
             plt.clf()
+            seen_images += 1
+            if num_images and num_images == seen_images:
+                break
         break
 
 
@@ -180,13 +187,19 @@ def main(args):
     trainloader, testloader = load_data(args.dataset)
 
     class Client(fl.client.NumPyClient):
+        def __init__(self):
+            super(Client, self).__init__()
+            self.calls = 0
+
         def get_parameters(self):
+            print("sending client parameters...")
             return [val.cpu().numpy() for _, val in net.state_dict().items()]
 
         def set_parameters(self, parameters):
-            params_dict = zip(net.state_dict().keys(), parameters)
-            state_dict = OrderedDict({k: torch.tensor(v) for k, v in params_dict})
-            net.load_state_dict(state_dict, strict=True)
+            print("updating client parameters...")
+            # params_dict = zip(net.state_dict().keys(), parameters)
+            # state_dict = OrderedDict({k: torch.tensor(v) for k, v in params_dict})
+            # net.load_state_dict(state_dict, strict=True)
 
         def fit(self, parameters, config):
             self.set_parameters(parameters)
@@ -197,17 +210,36 @@ def main(args):
                 testloader=testloader if args.verbose else None,
                 verbose=args.verbose,
             )
-            np.save(f"models/{args.dataset}_{args.epochs}_train_metrics", train_metrics)
-            save_images(net, trainloader)
+            np.save(f"models/{args.dataset}_{args.classes}_{args.epochs}_train_metrics", train_metrics)
+            print(train_metrics)
+            save_images(net, trainloader, args.classes, self.calls, 2)
+            self.calls += 1
             return self.get_parameters(), len(trainloader), {}
 
         def evaluate(self, parameters, config):
             self.set_parameters(parameters)
             tst_loss = eval_backprop_loss(net, testloader)
-            return (float(tst_loss), len(testloader), {})
+            return float(tst_loss), len(testloader), {}
 
-    fl.client.start_numpy_client("localhost:8080", client=Client())
+    if args.type == "client":
+        fl.client.start_numpy_client("localhost:8080", client=Client())
+    else:
+        strategy = FedAvg(min_available_clients=3, min_fit_clients=3, min_eval_clients=3,
+                          eval_fn=eval_fn_wrapper(net, testloader))
+        fl.server.start_server(
+            "localhost:8080", config={"num_rounds": 3}, strategy=strategy
+        )
 
+
+def eval_fn_wrapper(net, testloader):
+    def eval_fn(parameters):
+        params_dict = zip(net.state_dict().keys(), parameters)
+        state_dict = OrderedDict({k: torch.tensor(v) for k, v in params_dict})
+        net.load_state_dict(state_dict, strict=True)
+        tst_loss = eval_backprop_loss(net, testloader)
+        return float(tst_loss), {}
+
+    return eval_fn
 
 if __name__ == "__main__":
     args = run_argparse()
