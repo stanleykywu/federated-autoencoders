@@ -1,0 +1,34 @@
+➜  Federated-Autoencoders git:(main) python client.py --dataset=gtsrb --classes Keepright Stop Roadwork --epochs=15 --type server --latent_size 128
+Generating GTSRB DataLoader with classes: ['Keepright', 'Stop', 'Roadwork']
+Generating GTSRB DataLoader with classes: ['Keepright', 'Stop', 'Roadwork']
+INFO flower 2022-04-28 00:12:46,090 | app.py:109 | Flower server running (3 rounds)
+SSL is disabled
+INFO flower 2022-04-28 00:12:46,090 | server.py:128 | Initializing global parameters
+INFO flower 2022-04-28 00:12:46,090 | server.py:327 | Requesting initial parameters from one random client
+INFO flower 2022-04-28 00:13:21,301 | server.py:330 | Received initial parameters from one random client
+INFO flower 2022-04-28 00:13:21,301 | server.py:130 | Evaluating initial parameters
+INFO flower 2022-04-28 00:13:21,999 | server.py:133 | initial parameters (loss, other metrics): 0.0033275773748755455, {}
+INFO flower 2022-04-28 00:13:21,999 | server.py:143 | FL starting
+DEBUG flower 2022-04-28 00:13:21,999 | server.py:265 | fit_round: strategy sampled 3 clients (out of 3)
+DEBUG flower 2022-04-28 00:13:42,819 | server.py:277 | fit_round received 3 results and 0 failures
+INFO flower 2022-04-28 00:13:43,465 | server.py:158 | fit progress: (1, 0.0031495869625359774, {}, 21.465836625)
+INFO flower 2022-04-28 00:13:43,465 | server.py:209 | evaluate_round: no clients selected, cancel
+DEBUG flower 2022-04-28 00:13:43,465 | server.py:265 | fit_round: strategy sampled 3 clients (out of 3)
+DEBUG flower 2022-04-28 00:14:03,024 | server.py:277 | fit_round received 3 results and 0 failures
+INFO flower 2022-04-28 00:14:03,642 | server.py:158 | fit progress: (2, 0.0032237586565315723, {}, 41.641965125000006)
+INFO flower 2022-04-28 00:14:03,642 | server.py:209 | evaluate_round: no clients selected, cancel
+DEBUG flower 2022-04-28 00:14:03,642 | server.py:265 | fit_round: strategy sampled 3 clients (out of 3)
+DEBUG flower 2022-04-28 00:14:23,638 | server.py:277 | fit_round received 3 results and 0 failures
+INFO flower 2022-04-28 00:14:24,246 | server.py:158 | fit progress: (3, 0.0032436198089271784, {}, 62.246101458000005)
+INFO flower 2022-04-28 00:14:24,246 | server.py:209 | evaluate_round: no clients selected, cancel
+INFO flower 2022-04-28 00:14:24,246 | server.py:182 | FL finished in 62.246287583000004
+INFO flower 2022-04-28 00:14:24,246 | app.py:149 | app_fit: losses_distributed []
+INFO flower 2022-04-28 00:14:24,246 | app.py:150 | app_fit: metrics_distributed {}
+INFO flower 2022-04-28 00:14:24,246 | app.py:151 | app_fit: losses_centralized [(0, 0.0033275773748755455), (1, 0.0031495869625359774), (2, 0.0032237586565315723), (3, 0.0032436198089271784)]
+INFO flower 2022-04-28 00:14:24,246 | app.py:152 | app_fit: metrics_centralized {}
+
+
+Client:
+python client.py --dataset=gtsrb --classes Keepright --epochs=15 --type client --latent_size 128 &
+python client.py --dataset=gtsrb --classes Stop --epochs=15 --type client --latent_size 128 &
+python client.py --dataset=gtsrb --classes Roadwork --epochs=15 --type client --latent_size 128
