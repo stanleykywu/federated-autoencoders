@@ -1,0 +1,40 @@
+➜  Federated-Autoencoders git:(main) python client.py --dataset=cifar10 --classes plane car bird cat deer dog frog horse ship truck --epochs=15 --type server --latent_size 128
+Files already downloaded and verified
+Generating CIFAR-10 DataLoader with classes: ['plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
+Files already downloaded and verified
+Generating CIFAR-10 DataLoader with classes: ['plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
+INFO flower 2022-04-28 00:22:04,565 | app.py:109 | Flower server running (3 rounds)
+SSL is disabled
+INFO flower 2022-04-28 00:22:04,566 | server.py:128 | Initializing global parameters
+INFO flower 2022-04-28 00:22:04,566 | server.py:327 | Requesting initial parameters from one random client
+INFO flower 2022-04-28 00:22:12,935 | server.py:330 | Received initial parameters from one random client
+INFO flower 2022-04-28 00:22:12,935 | server.py:130 | Evaluating initial parameters
+INFO flower 2022-04-28 00:22:15,114 | server.py:133 | initial parameters (loss, other metrics): 0.002066363813355565, {}
+INFO flower 2022-04-28 00:22:15,114 | server.py:143 | FL starting
+DEBUG flower 2022-04-28 00:22:15,114 | server.py:265 | fit_round: strategy sampled 10 clients (out of 10)
+DEBUG flower 2022-04-28 00:23:59,820 | server.py:277 | fit_round received 10 results and 0 failures
+INFO flower 2022-04-28 00:24:02,054 | server.py:158 | fit progress: (1, 0.002241218462586403, {}, 106.938756)
+INFO flower 2022-04-28 00:24:02,054 | server.py:209 | evaluate_round: no clients selected, cancel
+DEBUG flower 2022-04-28 00:24:02,054 | server.py:265 | fit_round: strategy sampled 10 clients (out of 10)
+DEBUG flower 2022-04-28 00:25:35,585 | server.py:277 | fit_round received 10 results and 0 failures
+INFO flower 2022-04-28 00:25:37,738 | server.py:158 | fit progress: (2, 0.0024442218709737062, {}, 202.622884292)
+INFO flower 2022-04-28 00:25:37,738 | server.py:209 | evaluate_round: no clients selected, cancel
+DEBUG flower 2022-04-28 00:25:37,738 | server.py:265 | fit_round: strategy sampled 10 clients (out of 10)
+DEBUG flower 2022-04-28 00:27:08,923 | server.py:277 | fit_round received 10 results and 0 failures
+INFO flower 2022-04-28 00:27:11,136 | server.py:158 | fit progress: (3, 0.0025583805982023478, {}, 296.02061304200004)
+INFO flower 2022-04-28 00:27:11,137 | server.py:209 | evaluate_round: no clients selected, cancel
+INFO flower 2022-04-28 00:27:11,137 | server.py:182 | FL finished in 296.020771833
+INFO flower 2022-04-28 00:27:11,137 | app.py:149 | app_fit: losses_distributed []
+INFO flower 2022-04-28 00:27:11,137 | app.py:150 | app_fit: metrics_distributed {}
+INFO flower 2022-04-28 00:27:11,137 | app.py:151 | app_fit: losses_centralized [(0, 0.002066363813355565), (1, 0.002241218462586403), (2, 0.0024442218709737062), (3, 0.0025583805982023478)]
+
+python client.py --dataset=cifar10 --classes plane --epochs=15 --type client --latent_size 128
+& python client.py --dataset=cifar10 --classes car --epochs=15 --type client --latent_size 128
+& python client.py --dataset=cifar10 --classes bird --epochs=15 --type client --latent_size 128
+& python client.py --dataset=cifar10 --classes cat --epochs=15 --type client --latent_size 128
+& python client.py --dataset=cifar10 --classes deer --epochs=15 --type client --latent_size 128
+& python client.py --dataset=cifar10 --classes dog --epochs=15 --type client --latent_size 128
+& python client.py --dataset=cifar10 --classes frog --epochs=15 --type client --latent_size 128
+& python client.py --dataset=cifar10 --classes horse --epochs=15 --type client --latent_size 128
+& python client.py --dataset=cifar10 --classes ship --epochs=15 --type client --latent_size 128
+& python client.py --dataset=cifar10 --classes truck --epochs=15 --type client --latent_size 128
