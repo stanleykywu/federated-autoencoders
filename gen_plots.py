@@ -9,8 +9,16 @@ for p in pathlib.Path("models").iterdir():
     metrics = np.load(p, allow_pickle=True)
     backprop_training_loss = []
     recon_training_loss = []
-    print(p)
     if "central" in p.__str__():
+        continue
+    if "eval" in p.__str__():
+        plt.plot([i for i in range(len(metrics))], metrics)
+        plt.xlabel("Training Iteration")
+        plt.ylabel("Average Test KL + MSE Loss")
+        plt.title(f"{p.parts[1].split('_')[0]}: {p.parts[1].split('_')[1]}")
+        plt.savefig("plots/" + p.parts[1].__str__() + ".png", bbox_inches='tight')
+        plt.clf()
+        print(p.parts[1].split('_')[1], metrics[-1])
         continue
     for metric in metrics:
         backprop_training_loss += [metric["Training backprop loss"]]
@@ -35,7 +43,7 @@ for p in pathlib.Path("models").iterdir():
         if "fmnist" in p.__str__():
             fmnist += [np.load(p, allow_pickle=True)]
 
-print(cifar)
+print(gtsrb)
 
 plt.plot([i for i in range(len(cifar))], cifar)
 plt.xlabel("Training Iteration")

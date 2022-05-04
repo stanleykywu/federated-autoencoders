@@ -191,6 +191,8 @@ def main(args):
         def __init__(self):
             super(Client, self).__init__()
             self.calls = 0
+            self.global_loss = []
+            self.global_train = []
 
         def get_parameters(self):
             print("sending client parameters...")
@@ -211,16 +213,22 @@ def main(args):
                 testloader=testloader if args.verbose else None,
                 verbose=args.verbose,
             )
-            np.save(f"models/{args.dataset}_{'_'.join(args.classes).replace('/', '')}_{args.epochs}_train_metrics", train_metrics)
+            self.global_train += train_metrics
             print(train_metrics)
             save_images(net, trainloader, '_'.join(args.classes).replace('/', ''), self.calls, 2)
             self.calls += 1
+            if self.calls == 3:
+                np.save(f"models/{args.dataset}_{'_'.join(args.classes).replace('/', '')}_{args.epochs}_train_metrics",
+                        self.global_train)
+            self.evaluate(parameters, None)
             return self.get_parameters(), len(trainloader), {}
 
         def evaluate(self, parameters, config):
             self.set_parameters(parameters)
             tst_loss = eval_backprop_loss(net, testloader)
-            np.save(f"models/{args.dataset}_{'_'.join(args.classes).replace('/', '')}_{args.epochs}_eval_metrics", tst_loss)
+            self.global_loss += [tst_loss]
+            if self.calls == 3:
+                np.save(f"models/{args.dataset}_{'_'.join(args.classes).replace('/', '')}_{args.epochs}_eval_metrics", self.global_loss)
             return float(tst_loss), len(testloader), {}
 
     if args.type == "client":
