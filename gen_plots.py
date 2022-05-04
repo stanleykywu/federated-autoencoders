@@ -18,7 +18,7 @@ for p in pathlib.Path("models").iterdir():
         plt.title(f"{p.parts[1].split('_')[0]}: {p.parts[1].split('_')[1]}")
         plt.savefig("plots/" + p.parts[1].__str__() + ".png", bbox_inches='tight')
         plt.clf()
-        print(p.parts[1].split('_')[1], metrics[-1])
+        print(p.parts[1].split('_')[0], p.parts[1].split('_')[1], metrics[-1])
         continue
     for metric in metrics:
         backprop_training_loss += [metric["Training backprop loss"]]
