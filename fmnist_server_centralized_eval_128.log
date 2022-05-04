@@ -1,0 +1,46 @@
+python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Trouser" & python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Pullover" & python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Dress" & python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Coat" & python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Sandal" &  python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Shirt" &  python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Sneaker" &  python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Bag" & python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Ankle boot"
+➜  Federated-Autoencoders git:(main) ✗ python client.py --dataset=fmnist --classes "Trouser" "Pullover" "Dress" "Coat" "Sandal" "Shirt" "Sneaker" "Bag" "Ankle boot" --epochs=15 --type server --latent_size 128
+Generating FashionMNIST DataLoader with classes: ['Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+Generating FashionMNIST DataLoader with classes: ['Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+INFO flower 2022-05-03 22:50:28,587 | app.py:109 | Flower server running (3 rounds)
+SSL is disabled
+INFO flower 2022-05-03 22:50:28,588 | server.py:128 | Initializing global parameters
+INFO flower 2022-05-03 22:50:28,588 | server.py:327 | Requesting initial parameters from one random client
+INFO flower 2022-05-03 22:50:33,124 | server.py:330 | Received initial parameters from one random client
+INFO flower 2022-05-03 22:50:33,126 | server.py:130 | Evaluating initial parameters
+/Users/krish/Hack/school-git/Federated-Autoencoders/client.py:173: UserWarning: The use of `x.T` on tensors of dimension other than 2 to reverse their shape is deprecated and it will throw an error in a future release. Consider `x.mT` to transpose batches of matricesor `x.permute(*torch.arange(x.ndim - 1, -1, -1))` to reverse the dimensions of a tensor. (Triggered internally at  /Users/distiller/project/pytorch/aten/src/ATen/native/TensorShape.cpp:2318.)
+  plt.imshow(np.squeeze(image).T)
+Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+INFO flower 2022-05-03 22:50:35,736 | server.py:133 | initial parameters (loss, other metrics): 0.005658825393766165, {}
+INFO flower 2022-05-03 22:50:35,736 | server.py:143 | FL starting
+DEBUG flower 2022-05-03 22:50:35,736 | server.py:265 | fit_round: strategy sampled 9 clients (out of 9)
+DEBUG flower 2022-05-03 22:52:11,163 | server.py:277 | fit_round received 9 results and 0 failures
+Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+INFO flower 2022-05-03 22:52:13,627 | server.py:158 | fit progress: (1, 0.004609974101185799, {}, 97.88982970800001)
+INFO flower 2022-05-03 22:52:13,628 | server.py:209 | evaluate_round: no clients selected, cancel
+DEBUG flower 2022-05-03 22:52:13,628 | server.py:265 | fit_round: strategy sampled 9 clients (out of 9)
+DEBUG flower 2022-05-03 22:53:48,723 | server.py:277 | fit_round received 9 results and 0 failures
+Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+INFO flower 2022-05-03 22:53:51,091 | server.py:158 | fit progress: (2, 0.0039206906221807, {}, 195.351447958)
+INFO flower 2022-05-03 22:53:51,091 | server.py:209 | evaluate_round: no clients selected, cancel
+DEBUG flower 2022-05-03 22:53:51,091 | server.py:265 | fit_round: strategy sampled 9 clients (out of 9)
+DEBUG flower 2022-05-04 00:02:27,151 | server.py:277 | fit_round received 9 results and 0 failures
+Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+INFO flower 2022-05-04 00:18:27,905 | server.py:158 | fit progress: (3, 0.003694720333442092, {}, 296.6722295)
+INFO flower 2022-05-04 00:18:27,906 | server.py:209 | evaluate_round: no clients selected, cancel
+INFO flower 2022-05-04 00:18:27,906 | server.py:182 | FL finished in 296.6728745
+INFO flower 2022-05-04 00:18:27,908 | app.py:149 | app_fit: losses_distributed []
+INFO flower 2022-05-04 00:18:27,908 | app.py:150 | app_fit: metrics_distributed {}
+INFO flower 2022-05-04 00:18:27,908 | app.py:151 | app_fit: losses_centralized [(0, 0.005658825393766165), (1, 0.004609974101185799), (2, 0.0039206906221807), (3, 0.003694720333442092)]

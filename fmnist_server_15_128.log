@@ -27,12 +27,4 @@ INFO flower 2022-04-28 00:55:29,027 | app.py:150 | app_fit: metrics_distributed 
 INFO flower 2022-04-28 00:55:29,027 | app.py:151 | app_fit: losses_centralized [(0, 0.0057053635828197), (1, 0.004574746824800968), (2, 0.003878004616126418), (3, 0.003696643514558673)]
 
 
-python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Trouser" &
-python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Pullover" &
- python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Dress" &
- python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Coat" &
- python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Sandal" &
-  python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Shirt" &
-  python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Sneaker" &
-  python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Bag" &
-  python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Ankle boot"
+python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Trouser" & python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Pullover" & python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Dress" & python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Coat" & python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Sandal" &  python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Shirt" &  python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Sneaker" &  python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Bag" & python client.py --dataset=fmnist --epochs=15 --type client --latent_size 128 --classes "Ankle boot"

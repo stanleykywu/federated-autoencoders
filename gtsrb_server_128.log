@@ -1,4 +1,4 @@
-➜  Federated-Autoencoders git:(main) python client.py --dataset=gtsrb --classes Keepright Stop Roadwork --epochs=15 --type server --latent_size 128
+➜  Federated-Autoencoders git:(main) python client.py --dataset=gtsrb --classes Keepright Stop Roadwork Speedlimit(20km/h) Nopassing Yield Noentry Bumpyroad Pedestrians Aheadonly --epochs=15 --type server --latent_size 128
 Generating GTSRB DataLoader with classes: ['Keepright', 'Stop', 'Roadwork']
 Generating GTSRB DataLoader with classes: ['Keepright', 'Stop', 'Roadwork']
 INFO flower 2022-04-28 00:12:46,090 | app.py:109 | Flower server running (3 rounds)
@@ -29,6 +29,4 @@ INFO flower 2022-04-28 00:14:24,246 | app.py:152 | app_fit: metrics_centralized 
 
 
 Client:
-python client.py --dataset=gtsrb --classes Keepright --epochs=15 --type client --latent_size 128 &
-python client.py --dataset=gtsrb --classes Stop --epochs=15 --type client --latent_size 128 &
-python client.py --dataset=gtsrb --classes Roadwork --epochs=15 --type client --latent_size 128
+python client.py --dataset=gtsrb --classes Keepright --epochs=15 --type client --latent_size 128 & python client.py --dataset=gtsrb --classes Stop --epochs=15 --type client --latent_size 128 & python client.py --dataset=gtsrb --classes Roadwork --epochs=15 --type client --latent_size 128 & python client.py --dataset=gtsrb --classes Speedlimit(20km/h) --epochs=15 --type client --latent_size 128 & python client.py --dataset=gtsrb --classes Nopassing --epochs=15 --type client --latent_size 128 & python client.py --dataset=gtsrb --classes Yield --epochs=15 --type client --latent_size 128 & python client.py --dataset=gtsrb --classes Noentry --epochs=15 --type client --latent_size 128 & python client.py --dataset=gtsrb --classes Bumpyroad --epochs=15 --type client --latent_size 128 & python client.py --dataset=gtsrb --classes Pedestrians --epochs=15 --type client --latent_size 128 & python client.py --dataset=gtsrb --classes Aheadonly --epochs=15 --type client --latent_size 128

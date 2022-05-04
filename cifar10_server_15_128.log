@@ -28,13 +28,4 @@ INFO flower 2022-04-28 00:27:11,137 | app.py:149 | app_fit: losses_distributed [
 INFO flower 2022-04-28 00:27:11,137 | app.py:150 | app_fit: metrics_distributed {}
 INFO flower 2022-04-28 00:27:11,137 | app.py:151 | app_fit: losses_centralized [(0, 0.002066363813355565), (1, 0.002241218462586403), (2, 0.0024442218709737062), (3, 0.0025583805982023478)]
 
-python client.py --dataset=cifar10 --classes plane --epochs=15 --type client --latent_size 128
-& python client.py --dataset=cifar10 --classes car --epochs=15 --type client --latent_size 128
-& python client.py --dataset=cifar10 --classes bird --epochs=15 --type client --latent_size 128
-& python client.py --dataset=cifar10 --classes cat --epochs=15 --type client --latent_size 128
-& python client.py --dataset=cifar10 --classes deer --epochs=15 --type client --latent_size 128
-& python client.py --dataset=cifar10 --classes dog --epochs=15 --type client --latent_size 128
-& python client.py --dataset=cifar10 --classes frog --epochs=15 --type client --latent_size 128
-& python client.py --dataset=cifar10 --classes horse --epochs=15 --type client --latent_size 128
-& python client.py --dataset=cifar10 --classes ship --epochs=15 --type client --latent_size 128
-& python client.py --dataset=cifar10 --classes truck --epochs=15 --type client --latent_size 128
+python client.py --dataset=cifar10 --classes plane --epochs=15 --type client --latent_size 128 & python client.py --dataset=cifar10 --classes car --epochs=15 --type client --latent_size 128 & python client.py --dataset=cifar10 --classes bird --epochs=15 --type client --latent_size 128 & python client.py --dataset=cifar10 --classes cat --epochs=15 --type client --latent_size 128 & python client.py --dataset=cifar10 --classes deer --epochs=15 --type client --latent_size 128 & python client.py --dataset=cifar10 --classes dog --epochs=15 --type client --latent_size 128 & python client.py --dataset=cifar10 --classes frog --epochs=15 --type client --latent_size 128 & python client.py --dataset=cifar10 --classes horse --epochs=15 --type client --latent_size 128 & python client.py --dataset=cifar10 --classes ship --epochs=15 --type client --latent_size 128 & python client.py --dataset=cifar10 --classes truck --epochs=15 --type client --latent_size 128

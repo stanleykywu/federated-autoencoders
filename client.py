@@ -1,3 +1,4 @@
+import time
 from collections import OrderedDict
 import argparse
 
@@ -210,21 +211,22 @@ def main(args):
                 testloader=testloader if args.verbose else None,
                 verbose=args.verbose,
             )
-            np.save(f"models/{args.dataset}_{args.classes}_{args.epochs}_train_metrics", train_metrics)
+            np.save(f"models/{args.dataset}_{'_'.join(args.classes).replace('/', '')}_{args.epochs}_train_metrics", train_metrics)
             print(train_metrics)
-            save_images(net, trainloader, args.classes, self.calls, 2)
+            save_images(net, trainloader, '_'.join(args.classes).replace('/', ''), self.calls, 2)
             self.calls += 1
             return self.get_parameters(), len(trainloader), {}
 
         def evaluate(self, parameters, config):
             self.set_parameters(parameters)
             tst_loss = eval_backprop_loss(net, testloader)
+            np.save(f"models/{args.dataset}_{'_'.join(args.classes).replace('/', '')}_{args.epochs}_eval_metrics", tst_loss)
             return float(tst_loss), len(testloader), {}
 
     if args.type == "client":
         fl.client.start_numpy_client("localhost:8080", client=Client())
     else:
-        strategy = FedAvg(min_available_clients=9, min_fit_clients=9, min_eval_clients=9,
+        strategy = FedAvg(min_available_clients=10, min_fit_clients=10, min_eval_clients=10,
                           eval_fn=eval_fn_wrapper(net, testloader))
         fl.server.start_server(
             "localhost:8080", config={"num_rounds": 3}, strategy=strategy
@@ -237,6 +239,8 @@ def eval_fn_wrapper(net, testloader):
         state_dict = OrderedDict({k: torch.tensor(v) for k, v in params_dict})
         net.load_state_dict(state_dict, strict=True)
         tst_loss = eval_backprop_loss(net, testloader)
+        np.save(f"models/{args.dataset}_{'_'.join(args.classes).replace('/', '')}_{args.epochs}_{time.time()}_central_eval_metrics", tst_loss)
+        save_images(net, testloader, '_'.join(args.classes).replace('/', ''), time.time(), 2)
         return float(tst_loss), {}
 
     return eval_fn
