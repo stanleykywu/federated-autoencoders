@@ -8,8 +8,8 @@ from matplotlib import pyplot as plt
 cifar = pd.DataFrame()
 fmnist = pd.DataFrame()
 gtsrb = pd.DataFrame()
-for p in pathlib.Path("models").iterdir():
-    if p.is_dir() or p.__str__() == "models/Image_VAE.py" or "central" in p.__str__():
+for p in pathlib.Path("metrics").iterdir():
+    if p.is_dir() or p.__str__() == "metrics/Image_VAE.py" or "central" in p.__str__():
         continue
     metrics = np.load(p, allow_pickle=True)
     backprop_training_loss = []

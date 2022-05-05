@@ -138,6 +138,6 @@ cifar-10-python.tar.gz
 
 # Experimental data
 #images/
-#models/*.npy
+#metrics/*.npy
 
 

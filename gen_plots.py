@@ -3,8 +3,8 @@ import pathlib
 
 from matplotlib import pyplot as plt
 
-for p in pathlib.Path("models").iterdir():
-    if p.is_dir() or p.__str__() == "models/Image_VAE.py":
+for p in pathlib.Path("metrics").iterdir():
+    if p.is_dir() or p.__str__() == "metrics/Image_VAE.py":
         continue
     metrics = np.load(p, allow_pickle=True)
     backprop_training_loss = []
@@ -34,7 +34,7 @@ for p in pathlib.Path("models").iterdir():
 cifar = []
 gtsrb = []
 fmnist = []
-for p in pathlib.Path("models").iterdir():
+for p in pathlib.Path("metrics").iterdir():
     if "central" in p.__str__():
         if "cifar" in p.__str__():
             cifar += [np.load(p, allow_pickle=True)]

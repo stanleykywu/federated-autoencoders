@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 
+# code inspired by Flower tutorial
 
 class Flatten(nn.Module):
     """Flattens input by reshaping it into a one-dimensional tensor."""

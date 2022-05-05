@@ -218,7 +218,7 @@ def main(args):
             save_images(net, trainloader, '_'.join(args.classes).replace('/', ''), self.calls, 2)
             self.calls += 1
             if self.calls == 3:
-                np.save(f"models/{args.dataset}_{'_'.join(args.classes).replace('/', '')}_{args.epochs}_train_metrics",
+                np.save(f"metrics/{args.dataset}_{'_'.join(args.classes).replace('/', '')}_{args.epochs}_train_metrics",
                         self.global_train)
             self.evaluate(parameters, None)
             return self.get_parameters(), len(trainloader), {}
@@ -228,7 +228,7 @@ def main(args):
             tst_loss = eval_backprop_loss(net, testloader)
             self.global_loss += [tst_loss]
             if self.calls == 3:
-                np.save(f"models/{args.dataset}_{'_'.join(args.classes).replace('/', '')}_{args.epochs}_eval_metrics", self.global_loss)
+                np.save(f"metrics/{args.dataset}_{'_'.join(args.classes).replace('/', '')}_{args.epochs}_eval_metrics", self.global_loss)
             return float(tst_loss), len(testloader), {}
 
     if args.type == "client":
@@ -247,7 +247,8 @@ def eval_fn_wrapper(net, testloader):
         state_dict = OrderedDict({k: torch.tensor(v) for k, v in params_dict})
         net.load_state_dict(state_dict, strict=True)
         tst_loss = eval_backprop_loss(net, testloader)
-        np.save(f"models/{args.dataset}_{'_'.join(args.classes).replace('/', '')}_{args.epochs}_{time.time()}_central_eval_metrics", tst_loss)
+        np.save(
+            f"metrics/{args.dataset}_{'_'.join(args.classes).replace('/', '')}_{args.epochs}_{time.time()}_central_eval_metrics", tst_loss)
         save_images(net, testloader, '_'.join(args.classes).replace('/', ''), time.time(), 2)
         return float(tst_loss), {}
 
