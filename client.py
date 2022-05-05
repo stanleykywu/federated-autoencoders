@@ -234,7 +234,7 @@ def main(args):
     if args.type == "client":
         fl.client.start_numpy_client("localhost:8080", client=Client())
     else:
-        strategy = FedAvg(min_available_clients=9, min_fit_clients=9, min_eval_clients=9,
+        strategy = FedAvg(min_available_clients=1, min_fit_clients=1, min_eval_clients=1,
                           eval_fn=eval_fn_wrapper(net, testloader))
         fl.server.start_server(
             "localhost:8080", config={"num_rounds": 3}, strategy=strategy
