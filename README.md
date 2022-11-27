@@ -1,3 +1,4 @@
+Read our paper [here](https://github.com/stanleykywu/federated-autoencoders/blob/main/Federated%20Autoencoders.pdf)
 
 In order to run our experiments please see client.py for CLI implementation details.
 
